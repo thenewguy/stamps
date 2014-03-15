@@ -228,6 +228,13 @@ class StampsService(BaseService):
 
         return self.call("TrackShipment", **arguments)
 
+    @property
+    def package_types(self):
+        if self._package_types is None:
+            self._package_types = tuple(t[0] for t in self.create("PackageTypeV6"))
+        return self._package_types
+    _package_types = None
+
     def register_account(self, registration):
         """Register a new account.
 
@@ -250,6 +257,12 @@ class StampsService(BaseService):
 
         return self.call("CancelIndicium", **arguments)
 
+    @property
+    def service_types(self):
+        if self._service_types is None:
+            self._service_types = tuple(t[0] for t in self.create("ServiceType"))
+        return self._service_types
+    _service_types = None
 
 class XDecimal(XBuiltin):
     """Represents an XSD decimal type.
