@@ -128,7 +128,13 @@ class BaseService(object):
 class StampsService(BaseService):
     """Stamps.com service.
     """
-
+    @property
+    def add_on_types(self):
+        if self._add_on_types is None:
+            self._add_on_types = tuple(t[0] for t in self.create("AddOnTypeV5"))
+        return self._add_on_types
+    _add_on_types = None
+    
     def add_postage(self, amount, transaction_id=None):
         """Add postage to the account.
 
@@ -151,6 +157,14 @@ class StampsService(BaseService):
         """Create a new address object.
         """
         return self.create("Address")
+    
+    def create_customs(self):
+        """Create a new Customs object.
+        """
+        customs = self.create("CustomsV2")
+        line_array = self.create("ArrayOfCustomsLine")
+        customs.CustomsLines = line_array
+        return customs
 
     def create_purchase_status(self):
         """Create a new purchase status object.
