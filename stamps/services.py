@@ -38,7 +38,15 @@ class AuthenticatorPlugin(MessagePlugin):
     def __init__(self, credentials, client):
         self.credentials = credentials
         self.client = client
-        self.authenticator = None
+    
+    @property
+    def authenticator(self):
+        return self._authenticator
+    _authenticator = None
+    
+    @authenticator.setter
+    def authenticator(self, value):
+        self._authenticator = value
 
     def marshalled(self, context):
         """Add an authenticator token to the document before it is sent.
@@ -81,6 +89,7 @@ class BaseService(object):
 
     :param configuration: API configuration.
     """
+    plugin_class = AuthenticatorPlugin
 
     def __init__(self, configuration):
         Factory.maptag("decimal", XDecimal)
@@ -89,7 +98,7 @@ class BaseService(object):
         credentials.IntegrationID = configuration.integration_id
         credentials.Username = configuration.username
         credentials.Password = configuration.password
-        self.plugin = AuthenticatorPlugin(credentials, self.client)
+        self.plugin = self.plugin_class(credentials, self.client)
         self.client.set_options(plugins=[self.plugin], port=configuration.port)
         self.logger = getLogger("stamps")
 
