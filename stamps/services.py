@@ -56,19 +56,19 @@ class AuthenticatorPlugin(MessagePlugin):
         body = context.envelope.getChild("Body")
         operation = body[0]
 
-        if operation.name in ("AuthenticateUser", "RegisterAccount"):
-            pass
-        elif self.authenticator:
-            namespace = operation.namespace()
-            element = Element("Authenticator", ns=namespace)
-            element.setText(self.authenticator)
-            operation.insert(element)
-        else:
-            document = Document(self.client.wsdl)
-            method = self.client.service.AuthenticateUser.method
-            parameter = document.param_defs(method)[0]
-            element = document.mkparam(method, parameter, self.credentials)
-            operation.insert(element)
+        if operation.name not in ("AuthenticateUser", "RegisterAccount"):
+            authenticator = self.authenticator
+            if authenticator:
+                namespace = operation.namespace()
+                element = Element("Authenticator", ns=namespace)
+                element.setText(authenticator)
+                operation.insert(element)
+            else:
+                document = Document(self.client.wsdl)
+                method = self.client.service.AuthenticateUser.method
+                parameter = document.param_defs(method)[0]
+                element = document.mkparam(method, parameter, self.credentials)
+                operation.insert(element)
 
     def unmarshalled(self, context):
         """Store the authenticator token for the next call.
