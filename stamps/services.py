@@ -82,14 +82,14 @@ class BaseService(object):
     :param configuration: API configuration.
     """
 
-    def __init__(self, configuration):
+    def __init__(self, configuration, authenticator_plugin_class=AuthenticatorPlugin):
         Factory.maptag("decimal", XDecimal)
         self.client = Client(configuration.wsdl)
         credentials = self.create("Credentials")
         credentials.IntegrationID = configuration.integration_id
         credentials.Username = configuration.username
         credentials.Password = configuration.password
-        self.plugin = AuthenticatorPlugin(credentials, self.client)
+        self.plugin = authenticator_plugin_class(credentials, self.client)
         self.client.set_options(plugins=[self.plugin], port=configuration.port)
         self.logger = getLogger("stamps")
 
