@@ -82,9 +82,9 @@ class BaseService(object):
     :param configuration: API configuration.
     """
 
-    def __init__(self, configuration):
+    def __init__(self, configuration, **kwargs):
         Factory.maptag("decimal", XDecimal)
-        self.client = Client(configuration.wsdl)
+        self.client = Client(configuration.wsdl, **kwargs.pop("client_kwargs", {}))
         credentials = self.create("Credentials")
         credentials.IntegrationID = configuration.integration_id
         credentials.Username = configuration.username
@@ -92,6 +92,8 @@ class BaseService(object):
         self.plugin = AuthenticatorPlugin(credentials, self.client)
         self.client.set_options(plugins=[self.plugin], port=configuration.port)
         self.logger = getLogger("stamps")
+		if kwargs:
+			raise ValueError("Unexpected kwargs: %s" % kwargs.keys())
 
     def call(self, method, **kwargs):
         """Call the given web service method.
