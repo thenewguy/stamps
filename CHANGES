@@ -1,6 +1,17 @@
 Changelog
 ---------
 
+Version 0.9
+^^^^^^^^^^^
+
+* Add customs support for international shipping.
+
+Version 0.8
+^^^^^^^^^^^
+
+* Updated to Stamps.com v49 web services.
+* Required suds-jurko.
+
 Version 0.7.2
 ~~~~~~~~~~~~~
 

@@ -145,7 +145,22 @@ class StampsService(BaseService):
     def create_add_on(self):
         """Create a new add-on object.
         """
-        return self.create("AddOnV6")
+        return self.create("AddOnV7")
+
+    def create_customs(self):
+        """Create a new customs object.
+        """
+        return self.create("CustomsV3")
+
+    def create_array_of_customs_lines(self):
+        """Create a new array of customs objects.
+        """
+        return self.create("ArrayOfCustomsLine")
+
+    def create_customs_lines(self):
+        """Create new customs lines.
+        """
+        return self.create("CustomsLine")
 
     def create_address(self):
         """Create a new address object.
@@ -170,7 +185,7 @@ class StampsService(BaseService):
     def create_shipping(self):
         """Create a new shipping object.
         """
-        return self.create("RateV14")
+        return self.create("RateV18")
 
     def get_address(self, address):
         """Get a shipping address.
@@ -185,7 +200,7 @@ class StampsService(BaseService):
         return self.call("GetAccountInfo")
 
     def get_label(self, from_address, to_address, rate, transaction_id,
-            sample=False):
+            customs=None, sample=False):
         """Get a shipping label.
 
         :param from_address: The shipping 'from' address.
@@ -193,10 +208,12 @@ class StampsService(BaseService):
         :param rate: A rate instance for the shipment.
         :param transaction_id: ID that may be used to retry/rollback the
             purchase of this label.
+        :param customs: A customs instance for international shipments.
         :param sample: Default ``False``. Get a sample label without postage.
         """
         return self.call("CreateIndicium", IntegratorTxID=transaction_id,
-                Rate=rate, From=from_address, To=to_address, SampleOnly=sample)
+                Rate=rate, From=from_address, To=to_address, Customs=customs,
+                SampleOnly=sample)
 
     def get_postage_status(self, transaction_id):
         """Get postage purchase status.
