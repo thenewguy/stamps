@@ -83,3 +83,15 @@ developer.stamps.com to get your own integration ID, username, and password.
         username=username, password=password)
     service = StampsService(configuration=configuration)
     account = service.get_account()
+
+
+Running behind proxy
+====================
+
+The suds client does not configure proxy information from environment variables automatically.
+The proxy configuration can be supplied explicitly as follows:
+
+    import urllib
+    
+    service = StampsService(configuration=config)
+    service.client.set_options(proxy=urllib.getproxies())
